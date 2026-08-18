@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}HairGlow | Login{% endblock %}
+
+{% block content %}
+<div class="container" style="display: flex; justify-content: center; align-items: center; min-height: 70vh;">
+    <div class="auth-panel">
+        <div class="auth-header">
+            <h2>Welcome Back</h2>
+            <p>Log in to manage appointments & orders</p>
+        </div>
+        
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+            {% for field in form %}
+                <p>
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <span class="helptext">{{ field.help_text|safe }}</span>
+                    {% endif %}
+                </p>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary">Sign In</button>
+        </form>
+        
+        <div class="auth-footer">
+            <p>New to HairGlow? <a href="{% url 'register' %}">Create an Account</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

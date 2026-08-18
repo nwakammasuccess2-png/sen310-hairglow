@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}HairGlow | Book Consultation{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div style="margin-bottom: 3rem;">
+        <h1 style="font-size: 2.5rem; color: var(--gold); margin-bottom: 0.5rem;"><i class="fa-solid fa-calendar-days"></i> Consultation Booking</h1>
+        <p style="color: var(--text-muted);">Schedule a luxury personal hair health consultation with our expert team.</p>
+    </div>
+
+    <div class="booking-container">
+        <!-- Booking Form Panel -->
+        <div class="booking-left">
+            <h3 style="font-size: 1.4rem; margin-bottom: 1.5rem; color: var(--gold); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Scheduler Form</h3>
+            
+            <form method="post" id="booking-form" class="auth-form" style="max-width: 100%; padding: 0; background: none; border: none; box-shadow: none;">
+                {% csrf_token %}
+                
+                <p>
+                    <label for="name">Full Name *</label>
+                    <input type="text" name="name" id="name" value="{{ user.first_name }} {{ user.last_name }}" required>
+                </p>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <p>
+                        <label for="email">Email Address *</label>
+                        <input type="email" name="email" id="email" value="{{ user.email }}" required>
+                    </p>
+                    <p>
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" name="phone" id="phone" required>
+                    </p>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+                    <p>
+                        <label for="date">Select Date *</label>
+                        <input type="date" name="date" id="date" min="{{ min_date }}" required onchange="checkAvailability()">
+                    </p>
+                    <p>
+                        <label for="service_type">Service Type *</label>
+                        <select name="service_type" id="service_type" required>
+                            <option value="Hair Consultation">Hair Consultation</option>
+                            <option value="Scalp Analysis">Scalp Analysis</option>
+                            <option value="Glow Hair Treatment">Glow Hair Treatment</option>
+                            <option value="Restoration Regimen">Restoration Regimen</option>
+                        </select>
+                    </p>
+                </div>
+                
+                <!-- Interactive Time Slots -->
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary);">Available Time Slots *</label>
+                    <div id="slots-instructions" style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                        Select a date to load available time slots.
+                    </div>
+                    
+                    <div class="slots-grid" id="slots-grid-container">
+                        {% for val, label in time_slots %}
+                            <div class="slot-option" id="slot-container-{{ val|slugify }}">
+                                <input type="radio" name="time_slot" id="slot-{{ val|slugify }}" value="{{ val }}" required disabled>
+                                <label for="slot-{{ val|slugify }}" class="slot-label">{{ label }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <p>
+                    <label for="notes">Notes / Special Requests (Optional)</label>
+                    <textarea name="notes" id="notes" rows="3" placeholder="Tell us about your hair goals or scalp history..."></textarea>
+                </p>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;" id="submit-booking-btn" disabled>Confirm Booking Slot</button>
+            </form>
+        </div>
+
+        <!-- Info / Policy Panel -->
+        <div class="booking-right" style="display: flex; flex-direction: column; gap: 2rem;">
+            <div>
+                <h3 style="font-size: 1.4rem; margin-bottom: 1rem; color: var(--gold); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Why Book?</h3>
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem; font-size: 0.95rem; line-height: 1.5;">
+                    <li><i class="fa-solid fa-microscope" style="color: var(--gold); margin-right: 0.5rem;"></i> <strong>Scalp Microscope Check</strong>: We use professional imaging scopes to analyze hair folicles in real-time.</li>
+                    <li><i class="fa-solid fa-vial" style="color: var(--gold); margin-right: 0.5rem;"></i> <strong>Bespoke Formulation</strong>: Get prescriptions for customized botanicals to kickstart thick regrowth.</li>
+                    <li><i class="fa-solid fa-user-doctor" style="color: var(--gold); margin-right: 0.5rem;"></i> <strong>Experienced Stylists</strong>: Walk away with styling recommendations tailored specifically to your hair type.</li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 style="font-size: 1.4rem; margin-bottom: 1rem; color: var(--gold); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Salon Policies</h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;">
+                    We value both your time and our stylists' time. If you need to cancel or reschedule, please do so at least 24 hours prior to your slot.
+                </p>
+                <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6;">
+                    Appointments are kept pending until review. We will notify you once confirmed. Cancel pending reservations anytime from your Dashboard.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_body_js %}
+<script>
+    function checkAvailability() {
+        const dateInput = document.getElementById('date');
+        const dateValue = dateInput.value;
+        const slotsGrid = document.getElementById('slots-grid-container');
+        const instructions = document.getElementById('slots-instructions');
+        const submitBtn = document.getElementById('submit-booking-btn');
+        
+        if (!dateValue) {
+            instructions.textContent = "Select a date to load available time slots.";
+            submitBtn.disabled = true;
+            return;
+        }
+
+        instructions.textContent = "Checking slot availability...";
+        
+        fetch(`/book/check-availability/?date=${dateValue}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const bookedSlots = data.booked_slots || [];
+                const radios = slotsGrid.querySelectorAll('input[type="radio"]');
+                let availableCount = 0;
+
+                radios.forEach(radio => {
+                    const slotValue = radio.value;
+                    const containerId = 'slot-container-' + slotValue.replace(/[\s:-]+/g, '-').toLowerCase();
+                    const container = document.getElementById(containerId);
+                    
+                    if (bookedSlots.includes(slotValue)) {
+                        radio.disabled = true;
+                        radio.checked = false;
+                        if (container) {
+                            container.classList.add('booked');
+                        }
+                    } else {
+                        radio.disabled = false;
+                        if (container) {
+                            container.classList.remove('booked');
+                        }
+                        availableCount++;
+                    }
+                });
+
+                if (availableCount > 0) {
+                    instructions.innerHTML = `<span style="color: var(--success);"><i class="fa-solid fa-circle-check"></i> ${availableCount} time slot(s) available on this date.</span>`;
+                    submitBtn.disabled = false;
+                } else {
+                    instructions.innerHTML = `<span style="color: var(--error);"><i class="fa-solid fa-circle-xmark"></i> Sorry, all slots are booked on this date. Please choose another date.</span>`;
+                    submitBtn.disabled = true;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching availability:', error);
+                instructions.innerHTML = `<span style="color: var(--error);">Error checking slot availability. Please try again.</span>`;
+            });
+    }
+</script>
+{% endblock %}

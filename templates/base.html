@@ -1,0 +1,146 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}HairGlow | Premium Hair Consulting & E-Commerce{% endblock %}</title>
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Style System -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+    <!-- Header & Navigation -->
+    <header>
+        <div class="nav-container container">
+            <div class="logo">
+                <a href="{% url 'home' %}">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Hair<span>Glow</span>
+                </a>
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a></li>
+                    <li><a href="{% url 'product_list' %}" class="{% if request.resolver_match.url_name == 'product_list' %}active{% endif %}">Products</a></li>
+                    <li><a href="{% url 'book_appointment' %}" class="{% if request.resolver_match.url_name == 'book_appointment' %}active{% endif %}">Book Consultation</a></li>
+                    
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">Dashboard</a></li>
+                        <li><span style="color: var(--text-muted); font-size: 0.9rem;">Hello, <strong>{{ user.username }}</strong></span></li>
+                        <li><a href="{% url 'logout' %}" class="btn btn-secondary" style="padding: 0.4rem 1rem;">Logout</a></li>
+                    {% else %}
+                        <li><a href="{% url 'login' %}" class="{% if request.resolver_match.url_name == 'login' %}active{% endif %}">Login</a></li>
+                        <li><a href="{% url 'register' %}" class="btn btn-primary" style="padding: 0.4rem 1rem; color: var(--bg-dark);">Register</a></li>
+                    {% endif %}
+                    
+                    <li>
+                        <a href="{% url 'cart_detail' %}" class="cart-link {% if request.resolver_match.url_name == 'cart_detail' %}active{% endif %}" title="View Cart">
+                            <i class="fa-solid fa-bag-shopping cart-icon"></i>
+                            {% if cart_count > 0 %}
+                                <span class="cart-badge">{{ cart_count }}</span>
+                            {% endif %}
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Message Toast Containers -->
+    {% if messages %}
+        <div class="messages-container" id="toast-container">
+            {% for message in messages %}
+                <div class="message-toast {{ message.tags }}">
+                    <div style="display: flex; align-items: center; gap: 0.8rem;">
+                        {% if message.tags == 'success' %}
+                            <i class="fa-solid fa-circle-check" style="color: var(--success);"></i>
+                        {% elif message.tags == 'error' %}
+                            <i class="fa-solid fa-circle-exclamation" style="color: var(--error);"></i>
+                        {% elif message.tags == 'warning' %}
+                            <i class="fa-solid fa-triangle-exclamation" style="color: var(--gold);"></i>
+                        {% else %}
+                            <i class="fa-solid fa-circle-info" style="color: var(--info);"></i>
+                        {% endif %}
+                        <span>{{ message }}</span>
+                    </div>
+                    <button class="toast-close" onclick="dismissToast(this.parentElement)"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Main Content Area -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>HairGlow</h4>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem; line-height: 1.6;">Elevate your hair game with our luxurious natural treatments and premium salon consultations.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="{% url 'home' %}">Home</a></li>
+                        <li><a href="{% url 'product_list' %}">Shop Products</a></li>
+                        <li><a href="{% url 'book_appointment' %}">Book Appointment</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Customer Care</h4>
+                    <ul>
+                        {% if user.is_authenticated %}
+                            <li><a href="{% url 'dashboard' %}">My Account Dashboard</a></li>
+                        {% else %}
+                            <li><a href="{% url 'login' %}">Login</a></li>
+                            <li><a href="{% url 'register' %}">Create Account</a></li>
+                        {% endif %}
+                        <li><a href="{% url 'cart_detail' %}">View Shopping Cart</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact Us</h4>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem; line-height: 1.6;"><i class="fa-solid fa-location-dot" style="color: var(--gold); margin-right: 0.5rem;"></i> 101 Glow Boulevard, London, UK</p>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem; line-height: 1.6;"><i class="fa-solid fa-phone" style="color: var(--gold); margin-right: 0.5rem;"></i> +44 20 7946 0958</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; {% now "Y" %} HairGlow Co. All rights reserved. Designed for ultimate visual elegance.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Interactive Scripts -->
+    <script>
+        function dismissToast(toastElement) {
+            toastElement.style.opacity = '0';
+            toastElement.style.transform = 'translateY(-20px)';
+            setTimeout(() => {
+                toastElement.remove();
+            }, 300);
+        }
+
+        // Auto-dismiss toasts after 4 seconds
+        window.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('toast-container');
+            if (container) {
+                const toasts = container.getElementsByClassName('message-toast');
+                for (let toast of toasts) {
+                    setTimeout(() => {
+                        dismissToast(toast);
+                    }, 4000);
+                }
+            }
+        });
+    </script>
+    {% block extra_body_js %}{% endblock %}
+</body>
+</html>

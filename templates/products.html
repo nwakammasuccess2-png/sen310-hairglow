@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}HairGlow | Shop Premium Hair Products{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div style="margin-bottom: 3rem;">
+        <h1 style="font-size: 2.5rem; color: var(--gold); margin-bottom: 0.5rem;">Bespoke Hair Products</h1>
+        <p style="color: var(--text-muted);">Formulated with organic botanicals to cleanse, nourish, repair, and style your hair.</p>
+    </div>
+
+    <div class="products-layout">
+        <!-- Sidebar Filter / Search Panel -->
+        <aside class="search-filter-panel">
+            <h3 style="font-size: 1.2rem; margin-bottom: 1.25rem; color: var(--gold);"><i class="fa-solid fa-sliders" style="margin-right: 0.5rem;"></i> Filter & Search</h3>
+            <form action="{% url 'product_list' %}" method="get" class="search-form">
+                <input type="text" name="q" placeholder="Search products..." value="{{ query }}">
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Search</button>
+            </form>
+            {% if query %}
+                <a href="{% url 'product_list' %}" style="display: block; text-align: center; margin-top: 1rem; color: var(--text-muted); font-size: 0.85rem;"><i class="fa-solid fa-arrow-rotate-left"></i> Clear Search</a>
+            {% endif %}
+        </aside>
+
+        <!-- Products Listing -->
+        <section>
+            {% if products %}
+                <div class="products-grid">
+                    {% for product in products %}
+                        <div class="product-card">
+                            <div class="product-img-wrapper">
+                                <img src="{% static product.image_path %}" alt="{{ product.name }}">
+                            </div>
+                            <div class="product-info">
+                                <span class="stock-tag">
+                                    {% if product.stock > 0 %}
+                                        In Stock ({{ product.stock }})
+                                    {% else %}
+                                        <span class="out-of-stock">Out of Stock</span>
+                                    {% endif %}
+                                </span>
+                                <h3 class="product-name" style="font-size: 1.2rem; margin-bottom: 0.5rem;">{{ product.name }}</h3>
+                                <p class="product-desc" style="font-size: 0.88rem; line-height: 1.5; margin-bottom: 1.5rem;">{{ product.description }}</p>
+                                
+                                <div class="product-footer">
+                                    <span class="product-price" style="font-size: 1.3rem;">${{ product.price }}</span>
+                                    
+                                    {% if product.stock > 0 %}
+                                        <form action="{% url 'cart_add' product.id %}" method="post" style="display: flex; gap: 0.5rem; align-items: center;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="quantity" value="1">
+                                            <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem; color: var(--bg-dark);">
+                                                <i class="fa-solid fa-cart-plus"></i> Add
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem; cursor: not-allowed;" disabled>Sold Out</button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+                    <h3>No products found</h3>
+                    <p>We couldn't find any products matching "{{ query }}".</p>
+                    <a href="{% url 'product_list' %}" class="btn btn-secondary">Browse All Products</a>
+                </div>
+            {% endif %}
+        </section>
+    </div>
+</div>
+{% endblock %}

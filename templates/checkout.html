@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}HairGlow | Checkout{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div style="margin-bottom: 3rem;">
+        <h1 style="font-size: 2.5rem; color: var(--gold); margin-bottom: 0.5rem;"><i class="fa-solid fa-credit-card"></i> Checkout</h1>
+        <p style="color: var(--text-muted);">Please provide your delivery information to complete your order.</p>
+    </div>
+
+    <div class="checkout-layout">
+        <!-- Delivery Details Form -->
+        <div class="checkout-form-panel">
+            <h3 style="font-size: 1.4rem; margin-bottom: 1.5rem; color: var(--gold); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Delivery Details</h3>
+            
+            <form method="post" class="auth-form" style="max-width: 100%; padding: 0; background: none; border: none; box-shadow: none;">
+                {% csrf_token %}
+                <div class="form-grid">
+                    <p>
+                        <label for="first_name">First Name *</label>
+                        <input type="text" name="first_name" id="first_name" value="{{ user.first_name }}" required>
+                    </p>
+                    <p>
+                        <label for="last_name">Last Name *</label>
+                        <input type="text" name="last_name" id="last_name" value="{{ user.last_name }}" required>
+                    </p>
+                    <p>
+                        <label for="email">Email Address *</label>
+                        <input type="email" name="email" id="email" value="{{ user.email }}" required>
+                    </p>
+                    <p>
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" name="phone" id="phone" placeholder="e.g. +44 7911 123456" required>
+                    </p>
+                    <p class="full-width">
+                        <label for="address">Delivery Address *</label>
+                        <input type="text" name="address" id="address" placeholder="Street Name, House / Apartment Number" required>
+                    </p>
+                    <p>
+                        <label for="city">City *</label>
+                        <input type="text" name="city" id="city" required>
+                    </p>
+                    <p>
+                        <label for="postal_code">Postal Code *</label>
+                        <input type="text" name="postal_code" id="postal_code" required>
+                    </p>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 2rem;">Place Order (Cash on Delivery)</button>
+            </form>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="checkout-summary-panel">
+            <h3 style="font-size: 1.4rem; margin-bottom: 1.5rem; color: var(--gold); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Your Order</h3>
+            
+            <div class="checkout-items-list">
+                {% for item in cart_items %}
+                    <div class="checkout-item">
+                        <div class="checkout-item-details">
+                            <div class="checkout-item-title">{{ item.product.name }}</div>
+                            <div class="checkout-item-qty">Qty: {{ item.quantity }} @ ${{ item.product.price }}</div>
+                        </div>
+                        <span style="font-weight: 600; color: var(--gold);">${{ item.subtotal }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span style="font-weight: 600;">${{ total }}</span>
+            </div>
+            <div class="summary-row">
+                <span>Shipping</span>
+                <span style="color: var(--success); font-weight: 600;">FREE</span>
+            </div>
+            
+            <div class="summary-row total" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); font-size: 1.3rem;">
+                <span>Total</span>
+                <span>${{ total }}</span>
+            </div>
+            
+            <div class="checkout-payment-box">
+                <h4><i class="fa-solid fa-hand-holding-dollar"></i> Cash on Delivery</h4>
+                <p>You will pay the courier in cash when your package is delivered to your address. Free home inspections on delivery.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

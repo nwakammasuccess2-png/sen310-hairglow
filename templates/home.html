@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}HairGlow | Luxury Hair Consultations & Products{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-glow"></div>
+    <div class="container" style="display: grid; grid-template-columns: 1fr; gap: 3rem; align-items: center;">
+        <div class="hero-content">
+            <div class="hero-tag">Welcome to HairGlow</div>
+            <h1 class="hero-title">Unlock Your Hair's Natural Radiance</h1>
+            <p class="hero-desc">Experience premium scalp assessments, personalized hair care consultations, and high-end botanical products designed to make your hair glow.</p>
+            <div class="hero-btns">
+                <a href="{% url 'book_appointment' %}" class="btn btn-primary">Book Consultation</a>
+                <a href="{% url 'product_list' %}" class="btn btn-secondary">Shop Products</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Grid Section -->
+<section class="features" style="background: rgba(255,255,255,0.01); padding: 5rem 0; border-top: 1px solid rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.02);">
+    <div class="container">
+        <div style="text-align: center; max-width: 600px; margin: 0 auto 3rem;">
+            <h2 style="font-size: 2.2rem; margin-bottom: 1rem; color: var(--gold);">Our Bespoke Services</h2>
+            <p style="color: var(--text-muted);">We combine clinical scalp science with luxury aesthetics to deliver outstanding, long-lasting hair health results.</p>
+        </div>
+        
+        <div class="features-grid">
+            <!-- Feature 1 -->
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-calendar-check"></i></div>
+                <h3>Expert Consultation</h3>
+                <p>Sit down with our hair health experts for a complete analysis of your scalp and hair shaft structure, followed by a personalized restoration regimen plan.</p>
+                <a href="{% url 'book_appointment' %}" style="display: inline-block; margin-top: 1.5rem; color: var(--gold); font-weight: 600; font-size: 0.9rem;">Book Now <i class="fa-solid fa-arrow-right-long" style="margin-left: 0.4rem;"></i></a>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-sparkles"></i></div>
+                <h3>Premium Hair Products</h3>
+                <p>Browse our hand-formulated collection of organic rosemary growth shampoos, lavender-infused argan hair oils, and deep hydrating recovery masks.</p>
+                <a href="{% url 'product_list' %}" style="display: inline-block; margin-top: 1.5rem; color: var(--gold); font-weight: 600; font-size: 0.9rem;">View Shop <i class="fa-solid fa-arrow-right-long" style="margin-left: 0.4rem;"></i></a>
+            </div>
+            
+            <!-- Feature 3 -->
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-truck-fast"></i></div>
+                <h3>Cash on Delivery</h3>
+                <p>We deliver right to your doorstep. Inspect your premium hair products first, and pay cash only upon receiving them. Absolute convenience and trust.</p>
+                <span style="display: inline-block; margin-top: 1.5rem; color: var(--text-muted); font-size: 0.9rem;"><i class="fa-solid fa-circle-check" style="color: var(--success); margin-right: 0.3rem;"></i> Available Nationwide</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products Section -->
+{% if featured_products %}
+<section class="featured-products" style="padding: 5rem 0;">
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem;">
+            <div>
+                <h2 style="font-size: 2.2rem; color: var(--gold);">Featured Hair Essentials</h2>
+                <p style="color: var(--text-muted); margin-top: 0.5rem;">Explore our customer favorites formulated with natural botanical extracts.</p>
+            </div>
+            <a href="{% url 'product_list' %}" class="btn btn-secondary" style="padding: 0.5rem 1.25rem;">See All Products</a>
+        </div>
+        
+        <div class="products-grid">
+            {% for product in featured_products %}
+                <div class="product-card">
+                    <div class="product-img-wrapper">
+                        <img src="{% static product.image_path %}" alt="{{ product.name }}">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">{{ product.name }}</h3>
+                        <p class="product-desc">{{ product.description|truncatewords:15 }}</p>
+                        
+                        <div class="product-footer">
+                            <span class="product-price">${{ product.price }}</span>
+                            {% if product.stock > 0 %}
+                                <form action="{% url 'cart_add' product.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem; color: var(--bg-dark);">
+                                        <i class="fa-solid fa-plus" style="margin-right: 0.3rem;"></i> Add to Cart
+                                    </button>
+                                </form>
+                            {% else %}
+                                <span class="out-of-stock">Sold Out</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
