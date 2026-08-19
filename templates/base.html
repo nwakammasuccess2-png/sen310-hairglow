@@ -21,6 +21,9 @@
                     <i class="fa-solid fa-wand-magic-sparkles"></i> Hair<span>Glow</span>
                 </a>
             </div>
+            <div class="menu-toggle" id="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </div>
             <nav>
                 <ul class="nav-links">
                     <li><a href="{% url 'home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a></li>
@@ -126,6 +129,17 @@
             setTimeout(() => {
                 toastElement.remove();
             }, 300);
+        }
+
+        function toggleMobileMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            const menuIcon = document.querySelector('#mobile-menu-btn i');
+            navLinks.classList.toggle('active');
+            if (navLinks.classList.contains('active')) {
+                menuIcon.className = 'fa-solid fa-xmark';
+            } else {
+                menuIcon.className = 'fa-solid fa-bars';
+            }
         }
 
         // Auto-dismiss toasts after 4 seconds

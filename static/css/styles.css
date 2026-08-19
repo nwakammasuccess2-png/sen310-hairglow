@@ -950,3 +950,351 @@ footer {
     color: var(--text-muted);
     margin-bottom: 1.5rem;
 }
+
+/* ==========================================================================
+   Mobile Responsiveness Styles
+   ========================================================================== */
+
+/* Menu Toggle Button Hidden on Desktop */
+.menu-toggle {
+    display: none;
+    font-size: 1.5rem;
+    color: var(--gold);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.menu-toggle:hover {
+    color: var(--gold-light);
+}
+
+/* Tablets and Mobile Viewports */
+@media (max-width: 992px) {
+    /* Products Catalog Adjustments */
+    .products-layout {
+        grid-template-columns: 1fr;
+    }
+    
+    .search-filter-panel {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Container padding adjustments */
+    .container {
+        width: 92%;
+        padding: 1.5rem 0;
+    }
+
+    /* Responsive Navigation Hamburger Menu */
+    .menu-toggle {
+        display: block; /* Show hamburger button on mobile */
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: rgba(11, 12, 16, 0.98);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border-bottom: 1px solid var(--border-color);
+        padding: 1.5rem 2rem;
+        gap: 1.2rem;
+        align-items: stretch;
+        z-index: 99;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links li {
+        width: 100%;
+        text-align: left;
+    }
+
+    .nav-links a {
+        display: block;
+        padding: 0.5rem 0;
+        font-size: 1.05rem;
+    }
+
+    .nav-links .btn {
+        text-align: center;
+        margin-top: 0.5rem;
+    }
+
+    .cart-link {
+        justify-content: flex-start;
+        padding: 0.5rem 0;
+    }
+
+    .cart-badge {
+        position: relative;
+        top: 0;
+        right: 0;
+        margin-left: 0.5rem;
+        display: inline-block;
+    }
+
+    /* Hero Section Scaling */
+    .hero {
+        padding: 4rem 0;
+        text-align: center;
+    }
+
+    .hero-content {
+        margin: 0 auto;
+    }
+
+    .hero-title {
+        font-size: 2.2rem;
+        line-height: 1.2;
+    }
+
+    .hero-btns {
+        justify-content: center;
+    }
+
+    /* Feature Showcase Grid */
+    .features-grid {
+        margin: 2rem 0;
+        gap: 1.5rem;
+    }
+
+    .feature-card {
+        padding: 1.5rem;
+    }
+
+    /* Booking Grid Scaling */
+    .booking-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .booking-left,
+    .booking-right {
+        padding: 1.5rem;
+    }
+
+    .slots-grid {
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        gap: 0.6rem;
+    }
+
+    /* Forms */
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    /* Auth Panel spacing */
+    .auth-panel {
+        padding: 2rem 1.5rem;
+        margin: 2rem auto;
+    }
+
+    /* Cart Table Mobile Conversion to Cards */
+    .cart-table-wrapper {
+        padding: 1rem;
+    }
+
+    .cart-table, 
+    .cart-table tbody, 
+    .cart-table tr, 
+    .cart-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .cart-table thead {
+        display: none;
+    }
+
+    .cart-table tr {
+        border-bottom: 2px solid var(--border-color);
+        padding: 1rem 0;
+        position: relative;
+    }
+
+    .cart-table td {
+        border: none;
+        padding: 0.6rem 0;
+        text-align: left !important;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .cart-table td:nth-of-type(2)::before {
+        content: 'Quantity';
+        font-family: var(--font-heading);
+        font-weight: 600;
+        color: var(--gold);
+        font-size: 0.9rem;
+    }
+
+    .cart-table td:nth-of-type(3)::before {
+        content: 'Unit Price';
+        font-family: var(--font-heading);
+        font-weight: 600;
+        color: var(--gold);
+        font-size: 0.9rem;
+    }
+
+    .cart-table td:nth-of-type(4)::before {
+        content: 'Subtotal';
+        font-family: var(--font-heading);
+        font-weight: 600;
+        color: var(--gold);
+        font-size: 0.9rem;
+    }
+
+    .cart-table td:nth-of-type(5) {
+        justify-content: flex-end;
+        padding-top: 0.8rem;
+        border-top: 1px dashed rgba(255, 255, 255, 0.05);
+    }
+
+    .cart-item-product {
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        text-align: left;
+    }
+
+    /* Dashboard Layouts */
+    .dashboard-section {
+        padding: 1.5rem;
+    }
+
+    .dashboard-section h2 {
+        font-size: 1.4rem;
+    }
+
+    /* Dashboard Table Mobile Conversion to Cards */
+    .dashboard-table, 
+    .dashboard-table tbody, 
+    .dashboard-table tr, 
+    .dashboard-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .dashboard-table thead {
+        display: none;
+    }
+
+    .dashboard-table tr {
+        border-bottom: 2px solid var(--border-color);
+        padding: 1rem 0;
+        position: relative;
+    }
+
+    .dashboard-table td {
+        border: none;
+        padding: 0.5rem 0;
+        text-align: left !important;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* Bookings Table labels */
+    .dashboard-section:first-of-type .dashboard-table td:nth-of-type(1)::before {
+        content: 'Client Name';
+        font-weight: 600;
+        color: var(--gold);
+    }
+    .dashboard-section:first-of-type .dashboard-table td:nth-of-type(2)::before {
+        content: 'Date';
+        font-weight: 600;
+        color: var(--gold);
+    }
+    .dashboard-section:first-of-type .dashboard-table td:nth-of-type(3)::before {
+        content: 'Time Slot';
+        font-weight: 600;
+        color: var(--gold);
+    }
+    .dashboard-section:first-of-type .dashboard-table td:nth-of-type(4)::before {
+        content: 'Service Type';
+        font-weight: 600;
+        color: var(--gold);
+    }
+    .dashboard-section:first-of-type .dashboard-table td:nth-of-type(5)::before {
+        content: 'Status';
+        font-weight: 600;
+        color: var(--gold);
+    }
+    .dashboard-section:first-of-type .dashboard-table td:nth-of-type(6)::before {
+        content: 'Action';
+        font-weight: 600;
+        color: var(--gold);
+    }
+
+    /* Orders Table labels */
+    .dashboard-section:last-of-type .dashboard-table td:nth-of-type(1)::before {
+        content: 'Order ID';
+        font-weight: 600;
+        color: var(--gold);
+    }
+    .dashboard-section:last-of-type .dashboard-table td:nth-of-type(2)::before {
+        content: 'Recipient';
+        font-weight: 600;
+        color: var(--gold);
+    }
+    .dashboard-section:last-of-type .dashboard-table td:nth-of-type(3)::before {
+        content: 'Order Date';
+        font-weight: 600;
+        color: var(--gold);
+    }
+    .dashboard-section:last-of-type .dashboard-table td:nth-of-type(4)::before {
+        content: 'Total Amount';
+        font-weight: 600;
+        color: var(--gold);
+    }
+    .dashboard-section:last-of-type .dashboard-table td:nth-of-type(5)::before {
+        content: 'Payment';
+        font-weight: 600;
+        color: var(--gold);
+    }
+    .dashboard-section:last-of-type .dashboard-table td:nth-of-type(6)::before {
+        content: 'Status';
+        font-weight: 600;
+        color: var(--gold);
+    }
+    
+    /* Footer responsiveness */
+    footer {
+        padding: 3rem 0 1.5rem;
+    }
+    
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Extra Small Screen tweaks */
+    .hero-btns {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .hero-btns .btn {
+        width: 100%;
+    }
+    
+    .cart-item-product {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}
